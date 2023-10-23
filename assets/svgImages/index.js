@@ -11,6 +11,9 @@ import Profile from '../Profile.svg';
 import Project from '../Project.svg';
 import Search from '../Search.svg';
 import Map from '../Map.svg';
+import Office1 from '../Office1.svg';
+import Office2 from '../Office2.svg';
+import { Share } from '../Share.svg';
 
 export {
     MainIcon,
@@ -25,5 +28,8 @@ export {
     Profile,
     Project,
     Search,
-    Map
+    Map,
+    Office1,
+    Office2,
+    Share
 };
