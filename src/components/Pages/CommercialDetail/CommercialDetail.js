@@ -6,8 +6,10 @@ import CommercialDetailFooter from "./CommercialDetailFooter";
 import ImageScroll from "./ImageScroll";
 
 import PropertyType from "./PropertyType";
-
 import Downloads from "./Downloads";
+
+
+
 
 const CommercialDetail = ({ route }) => {
 
