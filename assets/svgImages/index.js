@@ -10,7 +10,7 @@ import Payments from '../Payments.svg';
 import Profile from '../Profile.svg';
 import Project from '../Project.svg';
 import Search from '../Search.svg';
-import Map from '../Map.svg';
+import MapSvg from '../MapSvg.svg';
 import Office1 from '../Office1.svg';
 import Office2 from '../Office2.svg';
 import { Share } from '../Share.svg';
@@ -28,7 +28,7 @@ export {
     Profile,
     Project,
     Search,
-    Map,
+    MapSvg,
     Office1,
     Office2,
     Share

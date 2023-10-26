@@ -1,38 +1,27 @@
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Map } from "../../../../assets";
+import { MapSvg } from "../../../../assets";
 import CommercialDetailFooter from "./CommercialDetailFooter";
 import ImageScroll from "./ImageScroll";
 
 import PropertyType from "./PropertyType";
 import Downloads from "./Downloads";
-
-
+import Map from "./Map";
+import { useNavigation } from '@react-navigation/native'
 
 
 const CommercialDetail = ({ route }) => {
+  const navigation = useNavigation();
+  const goToMap = () => {
+    navigation.navigate('Map');
+  }
 
   const { property } = route.params;
 
-  const onViewMapPress = () => {
-    // Construct the Google Maps URL with latitude and longitude (you can replace these with your desired coordinates)
-    const latitude = 37.7749; // Example latitude
-    const longitude = -122.4194; // Example longitude
-    const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-
-    // Open the URL using Linking
-    Linking.openURL(googleMapsUrl)
-      .then((supported) => {
-        if (!supported) {
-          console.log("Can't handle url: " + googleMapsUrl);
-        }
-      })
-      .catch((err) => console.error("An error occurred", err));
-  };
-
-
-
+  // const openMap = () => {
+  //   setShowMap(true);
+  // }
   return (
     <>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -42,11 +31,14 @@ const CommercialDetail = ({ route }) => {
             style={styles.propertyImage}
           />
           <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.button}  onPress={onViewMapPress}>
+            <TouchableOpacity style={styles.button}  onPress={ goToMap } >
               <Text style={styles.buttonText}>View on map</Text>
-              <Map />
+             
+              <MapSvg />
             </TouchableOpacity>
+
           </View>
+          
           <View style={styles.textBox}>
             <Text style={styles.name}>{property.name}</Text>
             <Text style={styles.detailsAddress}>{property.address}</Text>
@@ -60,7 +52,7 @@ const CommercialDetail = ({ route }) => {
           <ImageScroll />
           <PropertyType/>
          
-          
+         
          {/* <TypeDetails/> */}
 
          <Downloads/>

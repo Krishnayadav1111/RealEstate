@@ -1,8 +1,11 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { styles } from './Style';
-import { Map } from '../../../../assets/svgImages';
+import { MapSvg } from '../../../../assets/svgImages';
 import { useNavigation } from '@react-navigation/native'
+
+
+
 
 const Card = ({ property }) => {
   const [leadCount, setLeadCount] = useState(10); 
@@ -10,13 +13,17 @@ const Card = ({ property }) => {
   const goToCardDetails = () => {
     navigation.navigate('CommercialDetail', { property });
   }
-
+  const goToMap = () => {
+    navigation.navigate('Map');
+  }
+  
+  
   
   const increaseLeadCount = () => {
     setLeadCount(leadCount + 1);
   };
 
-  return (
+  return (<View>
     <TouchableOpacity onPress={goToCardDetails}> 
     <View style={styles.card}>
       <Image source={{ uri: property.imageUrl }} style={styles.propertyImage} />
@@ -29,8 +36,8 @@ const Card = ({ property }) => {
         </View>
       </View>
     </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>View on map</Text><Map/>
+        <TouchableOpacity style={styles.button} onPress={goToMap}>
+          <Text style={styles.buttonText}>View on map</Text><MapSvg/>
         </TouchableOpacity>
       </View>
       <Text style={styles.priceText}>{property.price}</Text>
@@ -48,6 +55,9 @@ const Card = ({ property }) => {
       </View>
     </View>
     </TouchableOpacity>
+
+   
+    </View>
   );
 };
 

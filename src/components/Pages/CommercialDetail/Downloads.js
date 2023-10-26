@@ -1,88 +1,57 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
+import { View, Text, Button,StyleSheet, ActivityIndicator, Alert ,TouchableOpacity} from 'react-native';
 import * as FileSystem from 'expo-file-system';
-import * as Notifications from 'expo-notifications';
+import * as MediaLibrary from 'expo-media-library';
+import * as Permissions from 'expo-permissions';
+
+
+
+
 
 const Downloads = () => {
-  const downloadPdf = async () => {
-    const pdfUrl = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+  const [downloading, setDownloading] = useState(false);
+  
 
-    // Get the local directory for saving the PDF
-    const directory = `${FileSystem.documentDirectory}brochure.pdf`;
+  const downloadPDF = async () => {
+    setDownloading(true);
+
+    const fileUri = 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+    const localUri = `${FileSystem.documentDirectory}dummy.pdf`;
+
+    const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY_WRITE_ONLY);
+
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Please allow access to save the file.');
+      return;
+    }
+
+    const downloadObject = FileSystem.createDownloadResumable(
+      fileUri,
+      localUri
+    );
 
     try {
-      // Show a notification when the download starts
-      const notificationId = await showDownloadNotification();
-
-      const downloadResult = await FileSystem.downloadAsync(pdfUrl, directory);
-
-      // Cancel the download notification
-      Notifications.cancelScheduledNotificationAsync(notificationId);
-
-      if (downloadResult.status === 200) {
-        console.log('PDF downloaded successfully to', downloadResult.uri);
-        const savedFilePath = `${FileSystem.documentDirectory}saved_brochure.pdf`;
-
-        await FileSystem.moveAsync({
-          from: downloadResult.uri,
-          to: savedFilePath,
-        });
-        console.log('PDF saved to', savedFilePath);
-
-        // Show a notification when the download is complete
-        showDownloadCompleteNotification(savedFilePath);
-      } else {
-        console.error('Failed to download PDF');
-        // Show an error notification
-        showDownloadErrorNotification();
-      }
+      const { uri } = await downloadObject.downloadAsync();
+      const asset = await MediaLibrary.createAssetAsync(uri);
+      await MediaLibrary.createAlbumAsync('PDFs', asset, false);
+      Alert.alert('Download Complete', 'The PDF has been downloaded and saved.');
     } catch (error) {
-      console.error('Error downloading PDF:', error);
-      
-      showDownloadErrorNotification();
+      console.error(error);
+      Alert.alert('Error', 'An error occurred while downloading the PDF.');
+    } finally {
+      setDownloading(false);
     }
   };
-
-  // Function to show a notification when the download starts
-  const showDownloadNotification = async () => {
-    const notificationContent = {
-      title: 'Download Started',
-      body: 'Downloading PDF file...',
-    };
-
-    const notificationId = await Notifications.scheduleNotificationAsync({
-      content: notificationContent,
-    });
-
-    return notificationId;
-  };
-
-  
-  const showDownloadCompleteNotification = (pdfFilePath) => {
-    const notificationContent = {
-      title: 'Download Completed',
-      body: 'PDF download is complete.',
-      data: { pdfFilePath }, // You can pass data to the notification for later use
-    };
-
-    Notifications.presentNotificationAsync(notificationContent);
-  };
-
-
-  const showDownloadErrorNotification = () => {
-    const notificationContent = {
-      title: 'Download Error',
-      body: 'Failed to download the PDF file.',
-    };
-
-    Notifications.presentNotificationAsync(notificationContent);
-  };
-
   return (
     <View style={styles.buttonContainerDownload}>
-      <TouchableOpacity style={styles.buttonDownload} onPress={downloadPdf}>
+       {downloading ? (
+        <ActivityIndicator />
+      ) : (
+
+      <TouchableOpacity style={styles.buttonDownload} onPress={downloadPDF}>
         <Text style={styles.buttonTextDownload}>Download Brochure</Text>
       </TouchableOpacity>
+       )}
       <TouchableOpacity style={styles.buttonDownload}>
         <Text style={styles.buttonTextDownload}>View Available Spaces</Text>
       </TouchableOpacity>

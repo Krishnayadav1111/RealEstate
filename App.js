@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
-
+import Map from "./src/components/Pages/CommercialDetail/Map";
 import HomePage from "./src/components/Pages/HomePage/HomePage";
 import store from "./Store/Store";
 import CommercialDetail from "./src/components/Pages/CommercialDetail/CommercialDetail";
@@ -19,6 +19,7 @@ const App = () => {
             component={HomePage}
           />
           <Stack.Screen name="CommercialDetail" component={CommercialDetail} />
+          <Stack.Screen name="Map" component={Map} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
